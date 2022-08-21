@@ -2,6 +2,8 @@ package com.yrc;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.apache.commons.cli.*;
@@ -41,7 +43,7 @@ public class Main {
         }
 
         Proxy proxy;
-        String message = commandLine.getOptionValue("e", CommentUtils.DEFAULT_MESSAGE);
+        String message = commandLine.getOptionValue("e", CommentUtils.getDefaultMessage());
         if (commandLine.hasOption("n") && commandLine.hasOption("p")) {
             proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(
                     commandLine.getOptionValue("n"), Integer.parseInt(commandLine.getOptionValue("p"))));
@@ -77,7 +79,7 @@ public class Main {
                 .addOption("m", "ips4_member_id", true, "cookie中的ips4_member_id")
                 .addOption("d", "ips4_device_key", true, "cookie中的ips4_device_key")
                 .addOption("s", "ips4_ss_id", true, "cookie中的ips4_ss_id")
-                .addOption("e", "message", true, "你签到贴的内容")
+                .addOption("e", "message", true, "你签到贴的内容，如未设置，则内容为\"签到+日期\"")
                 .addOption("p", "port", true, "如果要设置代理，代理的端口")
                 .addOption("n", "hostname", true, "如果要设置代理，代理的地址");
 

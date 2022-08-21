@@ -2,6 +2,8 @@ package com.yrc.utils;
 
 import java.io.IOException;
 import java.net.Proxy;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +18,10 @@ import com.yrc.pojo.Cookies;
 import com.yrc.pojo.FormData;
 
 public class CommentUtils {
-    public static final String DEFAULT_MESSAGE = "<p>签到</p>";
+    public static String getDefaultMessage() {
+        return String.format("<p>签到,%s</p>",
+                LocalDate.now().format(DateTimeFormatter.ofPattern("MM.dd")));
+    }
 
     private static final String FORM_PATH = "div[data-role=replyArea]>form";
 
@@ -44,7 +49,7 @@ public class CommentUtils {
     }
 
     public static void sendComment(String topicUrl) {
-        sendComment(topicUrl, DEFAULT_MESSAGE, Proxy.NO_PROXY);
+        sendComment(topicUrl, getDefaultMessage(), Proxy.NO_PROXY);
     }
 
     public static void sendComment(String topicUrl, String message) {
@@ -52,7 +57,7 @@ public class CommentUtils {
     }
 
     public static void sendComment(String topicUrl, Proxy proxy) {
-        sendComment(topicUrl, DEFAULT_MESSAGE, proxy);
+        sendComment(topicUrl, getDefaultMessage(), proxy);
     }
 
     public static void sendComment(String topicUrl, String message, Proxy proxy) {
