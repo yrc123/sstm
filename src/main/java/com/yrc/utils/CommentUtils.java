@@ -33,9 +33,9 @@ public class CommentUtils {
 
     private static final String CSRF_KEY_PATH = "input[name=csrfKey]";
 
-    private static final String TOPIC_COMMENT_PATH = ".ipsComposeArea_editor>div";
+    private static final String TOPIC_COMMENT_PATH = "[data-role=contentEditor]";
 
-    private static final String TOPIC_COMMENT_ATTR_NAME = "data-ipseditor-name";
+    private static final String TOPIC_COMMENT_ATTR_NAME = "name";
 
     private static final String PLUPLOAD_PATH = "input[name=plupload]";
 
