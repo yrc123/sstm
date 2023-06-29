@@ -1,14 +1,14 @@
 package com.yrc.utils;
 
-import java.io.IOException;
-import java.net.Proxy;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.Proxy;
 
 public class TopicListUtils {
     private static final String TOPIC_LIST_URL = "https://sstm.moe/forum/72-%E5%90%8C%E7%9B%9F%E7%AD%BE%E5%88%B0%E5%8C%BA/";
@@ -30,9 +30,9 @@ public class TopicListUtils {
         Document topicListPage;
         try {
             topicListPage = Jsoup.connect(TOPIC_LIST_URL)
-                    .proxy(proxy)
-                    .timeout(CommonUtils.TIMEOUT)
-                    .get();
+                .proxy(proxy)
+                .timeout(CommonUtils.TIMEOUT)
+                .get();
         } catch (IOException e) {
             log.error("无法获取签到帖列表，尝试试用代理");
             return null;
