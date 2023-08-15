@@ -1,16 +1,16 @@
-package com.yrc;
+package com.yrc.sstm.cli;
 
-import com.yrc.pojo.Cookies;
-import com.yrc.utils.CommentUtils;
-import com.yrc.utils.TopicListUtils;
+import com.yrc.sstm.core.SstmConfig;
+import com.yrc.sstm.core.SstmCookies;
+import com.yrc.sstm.core.SstmHomePage;
+import com.yrc.sstm.core.SstmProxy;
+import com.yrc.sstm.core.utils.CommentUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.*;
 
-import java.net.InetSocketAddress;
-import java.net.Proxy;
 import java.util.Optional;
 
-import static com.yrc.pojo.SstmOption.*;
+import static com.yrc.sstm.cli.SstmOption.*;
 
 @Slf4j
 public class Main {
@@ -23,40 +23,44 @@ public class Main {
             return;
         }
 
-        Proxy proxy = getProxy(cli);
-        String message = cli.getOptionValue(MESSAGE_OPTION.getOpt(), CommentUtils.getDefaultMessage());
-
-        Cookies currentUserCookies = getCurrentUserCookies(cli, proxy);
-        String todayTopicUrl = TopicListUtils.getTodayTopicUrl(proxy);
-        CommentUtils.sendComment(todayTopicUrl, message, proxy, currentUserCookies);
+        SstmConfig sstmConfig = buildSstmConfig(cli);
+        SstmHomePage homePage = new SstmHomePage(sstmConfig);
+        homePage.login();
+        homePage.checkIn();
     }
 
-    private static Proxy getProxy(CommandLine commandLine) {
-        Proxy proxy;
-        if (commandLine.hasOption(HOSTNAME_OPTION.getOpt())
-            && commandLine.hasOption(PORT_OPTION.getOpt())) {
-            proxy = new Proxy(Proxy.Type.HTTP,
-                new InetSocketAddress(
-                    commandLine.getOptionValue(HOSTNAME_OPTION.getOpt()),
-                    Integer.parseInt(commandLine.getOptionValue(PORT_OPTION.getOpt()))
-                )
-            );
-        } else {
-            proxy = Proxy.NO_PROXY;
-        }
-        return proxy;
+    private static SstmConfig buildSstmConfig(CommandLine cli) {
+        SstmProxy proxy = buildSstmProxy(cli);
+        SstmCookies cookies = buildSstmCookies(cli);
+        String message = buildMessage(cli);
+        return SstmConfig.builder()
+            .proxy(proxy)
+            .cookie(cookies)
+            .message(message)
+            .build();
     }
 
-    private static Cookies getCurrentUserCookies(CommandLine cli, Proxy proxy) {
-        Cookies currentUserCookies = Cookies.builder()
+    private static String buildMessage(CommandLine cli) {
+        return cli.getOptionValue(MESSAGE_OPTION.getOpt(), CommentUtils.getDefaultMessage());
+    }
+
+    private static SstmProxy buildSstmProxy(CommandLine cli) {
+        Integer port = Optional.ofNullable(cli.getOptionValue(PORT_OPTION.getOpt()))
+            .map(Integer::parseInt)
+            .orElse(null);
+        return SstmProxy.builder()
+            .hostname(cli.getOptionValue(HOSTNAME_OPTION.getOpt()))
+            .port(port)
+            .build();
+    }
+
+    private static SstmCookies buildSstmCookies(CommandLine cli) {
+        return SstmCookies.builder()
             .ips4LoginKey(cli.getOptionValue(IPS4_LOGIN_KEY_OPTION.getOpt()))
             .ips4MemberId(cli.getOptionValue(IPS4_MEMBER_ID_OPTION.getOpt()))
             .ips4DeviceKey(cli.getOptionValue(IPS4_DEVICE_KEY_OPTION.getOpt()))
             .ips4SsId(cli.getOptionValue(IPS4_SS_ID_OPTION.getOpt()))
             .build();
-        currentUserCookies.login(proxy);
-        log.info("获取Cookie信息：{}", currentUserCookies);
-        return currentUserCookies;
     }
 
     public static Boolean checkRequiredOpt(CommandLine cli) {

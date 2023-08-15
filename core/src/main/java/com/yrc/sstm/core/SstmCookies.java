@@ -1,26 +1,41 @@
-package com.yrc.pojo;
+package com.yrc.sstm.core;
 
-import com.yrc.utils.CommonUtils;
+import com.yrc.sstm.core.pojo.CookieField;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
 @AllArgsConstructor
 @Builder
 @Data
-public class Cookies {
+public class SstmCookies {
+
+    /**
+     * 在登录之后获取
+     */
     private String ips4IPSSessionFront;
 
+    /**
+     * cookie中的ips4_ss_id
+     */
     private String ips4SsId;
 
+    /**
+     * cookie中的ips4_login_key
+     */
     private String ips4LoginKey;
 
+    /**
+     * cookie中的ips4_member_id
+     */
     private String ips4MemberId;
 
+    /**
+     * cookie中的ips4_device_key
+     */
     private String ips4DeviceKey;
 
     public Map<String, String> toMap() {
@@ -51,13 +66,5 @@ public class Cookies {
     @Override
     public String toString() {
         return toMap().toString();
-    }
-
-    public void login(Proxy proxy) {
-        ips4IPSSessionFront = CommonUtils.getSessionFront(proxy, this);
-    }
-
-    public void login() {
-        login(null);
     }
 }

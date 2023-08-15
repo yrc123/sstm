@@ -1,5 +1,6 @@
-package com.yrc.pojo;
+package com.yrc.sstm.core.pojo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -7,6 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Data
+@AllArgsConstructor
 public class FormData {
     private String csrfKey;
     private String topicComment;
@@ -17,22 +19,6 @@ public class FormData {
     private String plupload;
 
     public FormData() {
-    }
-
-    public FormData(String csrfKey,
-                    String topicComment,
-                    String topicCommentName,
-                    String topicCommentUpload,
-                    String topicCommentUploadName,
-                    String commentFormSubmittedName,
-                    String plupload) {
-        this.csrfKey = csrfKey;
-        this.topicComment = topicComment;
-        this.topicCommentName = topicCommentName;
-        this.topicCommentUpload = topicCommentUpload;
-        this.topicCommentUploadName = topicCommentUploadName;
-        this.commentFormSubmittedName = commentFormSubmittedName;
-        this.plupload = plupload;
     }
 
     public Map<String, String> toMap() {

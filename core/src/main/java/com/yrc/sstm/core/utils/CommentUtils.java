@@ -1,13 +1,13 @@
-package com.yrc.utils;
+package com.yrc.sstm.core.utils;
 
-import com.yrc.pojo.Cookies;
-import com.yrc.pojo.FormData;
+import com.yrc.sstm.core.SstmCookies;
+import com.yrc.sstm.core.pojo.FormData;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.Proxy;
@@ -16,10 +16,18 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public class CommentUtils {
     public static String getDefaultMessage() {
-        return String.format("<p>签到,%s</p>",
-            LocalDate.now().format(DateTimeFormatter.ofPattern("MM.dd")));
+        return "签到，%d";
+    }
+    public static String formatCheckInMessage(String message) {
+        if (StringUtils.isBlank(message)) {
+            message = getDefaultMessage();
+        }
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("MM.dd"));
+        String replacedMessage = message.replace("%d", date);
+        return String.format("<p>%s</p>", replacedMessage);
     }
 
     private static final String FORM_PATH = "div[data-role=replyArea]>form";
@@ -42,24 +50,23 @@ public class CommentUtils {
 
     private static final String COMMENT_FORM_SUBMITTED_REGEX = "commentform_\\d*_submitted";
 
-    private static final Logger log = LoggerFactory.getLogger(CommentUtils.class);
 
     private CommentUtils() {
     }
 
-    public static void sendComment(String topicUrl, Cookies cookies) {
+    public static void sendComment(String topicUrl, SstmCookies cookies) {
         sendComment(topicUrl, getDefaultMessage(), Proxy.NO_PROXY, cookies);
     }
 
-    public static void sendComment(String topicUrl, String message, Cookies cookies) {
+    public static void sendComment(String topicUrl, String message, SstmCookies cookies) {
         sendComment(topicUrl, message, Proxy.NO_PROXY, cookies);
     }
 
-    public static void sendComment(String topicUrl, Proxy proxy, Cookies cookies) {
+    public static void sendComment(String topicUrl, Proxy proxy, SstmCookies cookies) {
         sendComment(topicUrl, getDefaultMessage(), proxy, cookies);
     }
 
-    public static void sendComment(String topicUrl, String message, Proxy proxy, Cookies cookies) {
+    public static void sendComment(String topicUrl, String message, Proxy proxy, SstmCookies cookies) {
         FormData formData = new FormData();
         //获取form表单
         Document topicPage;
@@ -78,7 +85,7 @@ public class CommentUtils {
         String csrfKey = form.select(CSRF_KEY_PATH).get(0).attr(ATTR_VALUE);
         formData.setCsrfKey(csrfKey);
         //设置签到消息
-        formData.setTopicComment(message);
+        formData.setTopicComment(formatCheckInMessage(message));
         //设置plupload
         String plupload = form.select(PLUPLOAD_PATH).get(0).attr(PLUPLOAD_VALUE);
         formData.setPlupload(plupload);

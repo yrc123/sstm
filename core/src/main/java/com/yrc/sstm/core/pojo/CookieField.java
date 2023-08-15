@@ -1,4 +1,4 @@
-package com.yrc.pojo;
+package com.yrc.sstm.core.pojo;
 
 public enum CookieField {
     IPS4_IPSSESSIONFRONT_NAME("ips4_IPSSessionFront"),

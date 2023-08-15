@@ -1,4 +1,4 @@
-package com.yrc.pojo;
+package com.yrc.sstm.core.pojo;
 
 public enum FormDataField {
     CSRF_KEY_NAME("csrfKey"),

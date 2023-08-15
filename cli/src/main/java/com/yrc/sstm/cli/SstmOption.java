@@ -1,4 +1,4 @@
-package com.yrc.pojo;
+package com.yrc.sstm.cli;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

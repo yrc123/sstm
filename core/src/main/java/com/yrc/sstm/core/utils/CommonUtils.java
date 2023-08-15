@@ -1,17 +1,16 @@
-package com.yrc.utils;
+package com.yrc.sstm.core.utils;
 
-import com.yrc.pojo.CookieField;
-import com.yrc.pojo.Cookies;
+import com.yrc.sstm.core.SstmCookies;
+import com.yrc.sstm.core.pojo.CookieField;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.Proxy;
 
+@Slf4j
 public class CommonUtils {
-    private static final Logger log = LoggerFactory.getLogger(CommonUtils.class);
     private static final String USERNAME_PATH = "#elUserLink";
     private static final String SESSION_FRONT_URL = "https://sstm.moe/";
     public static final String HREF = "href";
@@ -20,11 +19,11 @@ public class CommonUtils {
     private CommonUtils() {
     }
 
-    public static String getSessionFront(Cookies cookies) {
+    public static String getSessionFront(SstmCookies cookies) {
         return getSessionFront(null, cookies);
     }
 
-    public static String getSessionFront(Proxy proxy, Cookies cookies) {
+    public static String getSessionFront(Proxy proxy, SstmCookies cookies) {
         if (proxy == null) {
             proxy = Proxy.NO_PROXY;
         }
